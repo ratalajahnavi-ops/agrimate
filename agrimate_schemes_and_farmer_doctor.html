@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Agrimate: Schemes and Farmer Doctor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap">
+<style>
+:root {
+  --bg: #f4f7f3;
+  --card: #ffffff;
+  --ink: #1b2a26;
+  --mute: #53645e;
+  --line: #d6e2d8;
+  --brand: #25732b;
+  --brand-dark: #19541e;
+  --brand2: #d96f14;
+  --soft: #e6f2e5;
+  --warn: #fff3dc;
+  --danger: #b3261e;
+  --radius: 16px;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101613;
+    --card: #18211c;
+    --ink: #edf4ef;
+    --mute: #a3b2aa;
+    --line: #2a3931;
+    --soft: #1d3121;
+    --warn: #332717;
+    color-scheme: dark;
+  }
+}
+
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.55 "Inter", "Noto Sans Kannada", "Noto Sans Telugu", "Noto Sans Devanagari", system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Top header with single centered website icon */
+header {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 20px 8px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.brand-side h1 {
+  margin: 0;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.brand-side h1 span {
+  color: var(--brand2);
+}
+
+.sub {
+  margin: 0;
+  color: var(--mute);
+  font-size: 0.9rem;
+}
+
+.center-icon-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+#ico {
+  width: 60px;
+  height: 60px;
+  display: block;
+  filter: drop-shadow(0 6px 12px rgba(20, 107, 46, 0.16));
+  transition: transform 0.2s ease;
+}
+
+#ico:hover {
+  transform: scale(1.04);
+}
+
+.controls-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.langs, .tabs, .mode-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.langs {
+  justify-content: flex-end;
+}
+
+.langs button, .tabs button, .mode-btn {
+  min-height: 44px;
+  padding: 0 15px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 22px;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.langs button:hover, .tabs button:hover, .mode-btn:hover {
+  border-color: var(--brand);
+}
+
+.langs button[aria-pressed="true"] {
+  background: var(--brand2);
+  border-color: var(--brand2);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.nav-strip {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8px 20px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tabs button[aria-pressed="true"] {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.mode-btn[aria-pressed="true"] {
+  background: var(--soft);
+  border-color: var(--brand);
+  color: var(--brand-dark);
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  .mode-btn[aria-pressed="true"] {
+    color: #b7f0b9;
+  }
+}
+
+/* Main layouts: Laptop/Desktop default & Mobile responsive */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 20px 44px;
+  display: grid;
+  grid-template-columns: minmax(340px, 440px) 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+main.mode-mobile {
+  max-width: 520px;
+  grid-template-columns: 1fr;
+}
+
+main.mode-laptop {
+  max-width: 1280px;
+  grid-template-columns: minmax(360px, 460px) 1fr;
+}
+
+.panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.panel h2 {
+  margin: 0 0 14px;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.bubble {
+  background: var(--soft);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+}
+
+.bubble.me {
+  background: var(--brand);
+  color: #ffffff;
+  margin-left: 24px;
+}
+
+.opts {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 14px;
+}
+
+.opts button, .ghost, select {
+  min-height: 48px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 12px;
+  font: inherit;
+  text-align: left;
+  padding: 0 14px;
+  cursor: pointer;
+  width: 100%;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.opts button:hover, .ghost:hover, select:hover {
+  border-color: var(--brand);
+  background: var(--soft);
+}
+
+.say {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.say input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0 14px;
+  font: inherit;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.say input:focus, .qin input:focus, select:focus {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
+}
+
+.mic, .rec-btn {
+  min-width: 48px;
+  min-height: 48px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--brand2);
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.mic {
+  width: 48px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.mic.on, .rec-btn.on {
+  background: var(--danger);
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(179, 38, 30, 0.45); }
+  50% { box-shadow: 0 0 0 8px rgba(179, 38, 30, 0); }
+}
+
+.go {
+  min-height: 48px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--brand);
+  color: #ffffff;
+  padding: 0 16px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.go:hover {
+  background: var(--brand-dark);
+}
+
+.note {
+  color: var(--mute);
+  font-size: 0.88rem;
+  margin-top: 12px;
+  line-height: 1.45;
+}
+
+.status-banner {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  background: var(--soft);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.status-banner.warn {
+  background: var(--warn);
+  border-color: #e0a34b;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin: 14px 0 6px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chips button {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 22px;
+  padding: 0 14px;
+  font: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chips button[aria-pressed="true"] {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.drop {
+  display: block;
+  border: 2px dashed var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  color: var(--mute);
+  background: var(--bg);
+}
+
+.drop img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 10px;
+  display: block;
+  margin: 10px auto 0;
+}
+
+.audio-box {
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.audio-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.audio-box audio {
+  width: 100%;
+  margin-top: 10px;
+  height: 40px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 14px;
+}
+
+.sc {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg);
+}
+
+.sc h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--brand);
+}
+
+.sc p {
+  margin: 0;
+}
+
+.docs {
+  color: var(--mute);
+  font-size: 0.88rem;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.row button, .row a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 14px;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.listen {
+  border: 1px solid var(--brand);
+  background: var(--card);
+  color: var(--brand);
+}
+
+.apply {
+  background: var(--brand);
+  color: #ffffff;
+  border: 1px solid var(--brand);
+}
+
+.empty {
+  color: var(--mute);
+  padding: 28px 12px;
+  text-align: center;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.sec {
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+
+.sec h4 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+}
+
+.sec ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.sec li {
+  margin-bottom: 4px;
+}
+
+.diag-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: var(--bg);
+  margin-bottom: 12px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.sev-low { background: #25732b; }
+.sev-medium { background: #b36b00; }
+.sev-high { background: #b3261e; }
+
+.band {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  margin: 8px 0 4px;
+}
+
+.band span {
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.safe {
+  background: var(--warn);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 12px;
+  border: 1px solid rgba(217, 111, 20, 0.25);
+}
+
+.demo {
+  background: var(--soft);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  margin-bottom: 12px;
+}
+
+.mini {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 20px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.chg {
+  margin: 8px 6px 0 0;
+}
+
+.qin {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0 12px;
+}
+
+.qin input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0 12px;
+  font: inherit;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.hide {
+  display: none !important;
+}
+
+@media (max-width: 820px) {
+  header {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    padding: 14px 14px 6px;
+  }
+  .brand-side {
+    align-items: center;
+  }
+  .controls-side {
+    align-items: center;
+  }
+  .langs {
+    justify-content: center;
+  }
+  .nav-strip {
+    padding: 6px 14px;
+    justify-content: center;
+  }
+  main {
+    grid-template-columns: 1fr;
+    padding: 10px 14px 32px;
+  }
+  .panel {
+    padding: 16px;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand-side">
+    <h1>Agri<span>mate</span></h1>
+    <p class="sub" id="tag"></p>
+  </div>
+
+  <!-- Strictly one single centered website icon in the middle of the header -->
+  <div class="center-icon-wrap">
+    <svg id="ico" width="60" height="60" viewBox="0 0 128 128" role="img" aria-label="Agrimate icon">
+      <defs>
+        <linearGradient id="gTile" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#6fdc5c"/>
+          <stop offset="0.55" stop-color="#23923f"/>
+          <stop offset="1" stop-color="#146b2e"/>
+        </linearGradient>
+        <linearGradient id="gSide" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#0f5a26"/>
+          <stop offset="1" stop-color="#083a18"/>
+        </linearGradient>
+        <linearGradient id="gGloss" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fff" stop-opacity="0.6"/>
+          <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="gSun" cx="0.35" cy="0.3" r="0.75">
+          <stop offset="0" stop-color="#fff6ad"/>
+          <stop offset="0.5" stop-color="#ffb62e"/>
+          <stop offset="1" stop-color="#ee6f0a"/>
+        </radialGradient>
+        <linearGradient id="gLeafL" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#d8f87a"/>
+          <stop offset="0.5" stop-color="#6cc82c"/>
+          <stop offset="1" stop-color="#2c8a1b"/>
+        </linearGradient>
+        <linearGradient id="gLeafR" x1="1" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#e6fb94"/>
+          <stop offset="0.5" stop-color="#7fd63a"/>
+          <stop offset="1" stop-color="#34971f"/>
+        </linearGradient>
+        <linearGradient id="gSoil" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#b98036"/>
+          <stop offset="1" stop-color="#5e3511"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="64" cy="124" rx="42" ry="3.5" fill="#000" opacity="0.2"/>
+      <rect x="10" y="16" width="108" height="106" rx="26" fill="url(#gSide)"/>
+      <rect x="10" y="10" width="108" height="106" rx="26" fill="url(#gTile)"/>
+      <rect x="13.5" y="13.5" width="101" height="99" rx="23" fill="none" stroke="#fff" stroke-opacity="0.3" stroke-width="2"/>
+      <path d="M18 42C18 24 32 14 52 14H76C96 14 110 24 110 42C80 54 48 54 18 42Z" fill="url(#gGloss)"/>
+      <circle cx="93" cy="30" r="12" fill="url(#gSun)"/>
+      <ellipse cx="88.5" cy="25.5" rx="4.5" ry="3" fill="#fff" opacity="0.65"/>
+      <path d="M26 99C32 85 50 80 64 80C78 80 96 85 102 99C102 103 98 105 94 105H34C30 105 26 103 26 99Z" fill="url(#gSoil)"/>
+      <path d="M34 90C42 84 52 82 62 82" stroke="#e0b070" stroke-opacity="0.6" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M61 83C61 72 62 62 62 54H67C67 62 68 72 68 83Z" fill="#3fa22a"/>
+      <path d="M63 66C46 68 32 58 30 41C48 39 64 49 63 66Z" fill="url(#gLeafL)"/>
+      <path d="M65 68C80 70 93 62 95 48C79 46 64 54 65 68Z" fill="url(#gLeafR)"/>
+      <path d="M63 66C54 58 44 52 34 46" stroke="#fff" stroke-opacity="0.55" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <path d="M65 68C74 62 84 56 90 51" stroke="#fff" stroke-opacity="0.55" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div class="controls-side">
+    <div class="langs" id="langs" role="group" aria-label="Language selector">
+      <button type="button" data-l="en" aria-pressed="true">English</button>
+      <button type="button" data-l="kn" aria-pressed="false">ಕನ್ನಡ</button>
+      <button type="button" data-l="te" aria-pressed="false">తెలుగు</button>
+      <button type="button" data-l="hi" aria-pressed="false">हिंदी</button>
+    </div>
+  </div>
+</header>
+
+<div class="nav-strip">
+  <nav class="tabs" id="tabs" role="tablist">
+    <button type="button" role="tab" data-t="s" aria-pressed="true" id="tabS"></button>
+    <button type="button" role="tab" data-t="f" aria-pressed="false" id="tabF"></button>
+  </nav>
+  <div class="mode-bar" id="modeBar" role="group" aria-label="Device layout mode">
+    <button type="button" class="mode-btn" id="modeAuto" data-m="auto" aria-pressed="true"></button>
+    <button type="button" class="mode-btn" id="modeMobile" data-m="mobile" aria-pressed="false"></button>
+    <button type="button" class="mode-btn" id="modeLaptop" data-m="laptop" aria-pressed="false"></button>
+  </div>
+</div>
+
+<!-- Find Schemes View -->
+<main id="vs">
+  <section class="panel" aria-live="polite">
+    <h2 id="askh"></h2>
+    <div id="chat"></div>
+    <div class="opts" id="opts"></div>
+    <!-- Main typing and mic bar always visible and enabled -->
+    <div class="say" id="sayBar">
+      <input id="txt" type="text" autocomplete="off">
+      <button type="button" class="mic" id="mic" aria-label="Speak">🎤</button>
+      <button type="button" class="go" id="go"></button>
+    </div>
+    <p class="note" id="note"></p>
+  </section>
+
+  <section class="panel">
+    <h2 id="resh"></h2>
+    <div class="cards" id="cards"></div>
+    <button type="button" class="ghost" id="again" style="margin-top:14px;display:none"></button>
+  </section>
+</main>
+
+<!-- Farmer Doctor View -->
+<main id="vf" class="hide">
+  <section class="panel">
+    <h2 id="fh"></h2>
+
+    <label for="crop" id="cropL"></label>
+    <select id="crop"></select>
+
+    <label id="photoL"></label>
+    <label class="drop" for="photo">
+      <span id="dropT"></span>
+      <img id="prev" alt="" class="hide">
+    </label>
+    <input type="file" id="photo" accept="image/*" capture="environment" class="hide">
+
+    <!-- Multi-select symptom chips + typing & speech input -->
+    <label id="symL"></label>
+    <div class="chips" id="chips" role="group" aria-label="Symptoms"></div>
+
+    <div class="qin">
+      <input id="symtxt" type="text" autocomplete="off">
+      <button type="button" class="mic" id="symmic" aria-label="Speak">🎤</button>
+      <button type="button" class="go" id="symgo"></button>
+    </div>
+
+    <!-- Dedicated audio recording & playback box -->
+    <label id="audL"></label>
+    <div class="audio-box" id="audioBox">
+      <div class="audio-controls">
+        <button type="button" class="rec-btn" id="recBtn">⏺ <span id="recTxt"></span></button>
+        <button type="button" class="mini" id="clearRecBtn"></button>
+      </div>
+      <div id="recStatus" class="note" style="margin-top:8px;"></div>
+      <audio id="audioPlayer" controls class="hide"></audio>
+    </div>
+
+    <button type="button" class="go" id="analyze" style="margin-top:16px;width:100%"></button>
+    <p class="note" id="fnote"></p>
+  </section>
+
+  <section class="panel" aria-live="polite">
+    <h2 id="fres"></h2>
+    <div id="out"></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var L = "en";
+  var layoutMode = "auto";
+  var step = 0;
+  var ans = {};
+  var selectedSyms = []; // Multiple symptoms array in Farmer Doctor mode
+  var diagShown = false;
+
+  // Audio recording state
+  var mediaRecorder = null;
+  var audioChunks = [];
+  var audioBlob = null;
+  var audioUrl = null;
+  var isRecording = false;
+  var audioDetectedSignal = false;
+  var audioCtx = null;
+  var analyser = null;
+  var animFrame = null;
+  var peakLevel = 0;
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  // Complete translations in English (en), Kannada (kn), Telugu (te), and Hindi (hi)
+  var T = {
+    tag: {
+      en: "Schemes and crop help in your language",
+      kn: "ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಯೋಜನೆಗಳು ಮತ್ತು ಬೆಳೆ ಸಲಹೆ",
+      te: "మీ భాషలో పథకాలు, పంట సలహా",
+      hi: "अपनी भाषा में योजनाएं और फसल सलाह"
+    },
+    modeAuto: { en: "Auto", kn: "ಸ್ವಯಂ", te: "ఆటో", hi: "ऑटो" },
+    modeMobile: { en: "Mobile Mode", kn: "ಮೊಬೈಲ್ ಮೋಡ್", te: "మొబైల్ మోడ్", hi: "मोबाइल मोड" },
+    modeLaptop: { en: "Laptop Mode", kn: "ಲ್ಯಾಪ್‌ಟಾಪ್ ಮೋಡ್", te: "ల్యాప్‌టాప్ మోడ్", hi: "लैपटॉप मोड" },
+    tabS: { en: "Find schemes", kn: "ಯೋಜನೆಗಳನ್ನು ಹುಡುಕಿ", te: "పథకాలు", hi: "योजनाएं" },
+    tabF: { en: "Farmer Doctor", kn: "ರೈತ ವೈದ್ಯ", te: "రైతు డాక్టర్", hi: "किसान डॉक्टर" },
+    askh: { en: "Tell us about you", kn: "ನಿಮ್ಮ ಬಗ್ಗೆ ತಿಳಿಸಿ", te: "మీ గురించి చెప్పండి", hi: "अपने बारे में बताइए" },
+    resh: { en: "Schemes for you", kn: "ನಿಮಗೆ ಸೂಕ್ತವಾದ ಯೋಜನೆಗಳು", te: "మీకు సరిపోయే పథకాలు", hi: "आपके लिए योजनाएं" },
+    chg: { en: "Change", kn: "ಬದಲಾಯಿಸಿ", te: "మార్చు", hi: "बदलें" },
+    typeAns: {
+      en: "Type your answer here…",
+      kn: "ನಿಮ್ಮ ಉತ್ತರವನ್ನು ಇಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ…",
+      te: "మీ జవాబు ఇక్కడ టైప్ చేయండి…",
+      hi: "अपना उत्तर यहाँ लिखें…"
+    },
+    typeSym: {
+      en: "Type symptoms (e.g. spots, yellow, holes)…",
+      kn: "ಲಕ್ಷಣಗಳನ್ನು ಟೈಪ್ ಮಾಡಿ (ಉದಾ: ಕಲೆ, ಹಳದಿ, ರಂಧ್ರ)…",
+      te: "లక్షణాలు టైప్ చేయండి (ఉదా: మచ్చలు, పసుపు, రంధ్రాలు)…",
+      hi: "लक्षण लिखें (जैसे: धब्बे, पीला, छेद)…"
+    },
+    ph: {
+      en: "Type here or tap mic, e.g. “I am a farmer”",
+      kn: "ಇಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಮೈಕ್ ಒತ್ತಿ, ಉದಾ: “ನಾನು ರೈತ”",
+      te: "ఇక్కడ టైప్ చేయండి లేదా మైక్ నొక్కండి: “నేను రైతును”",
+      hi: "यहाँ लिखें या माइक दबाएं, जैसे: “मैं किसान हूँ”"
+    },
+    go: { en: "Send", kn: "ಕಳುಹಿಸಿ", te: "పంపు", hi: "भेजें" },
+    listen: { en: "Listen", kn: "ಕೇಳಿ", te: "వినండి", hi: "सुनें" },
+    apply: { en: "Apply", kn: "ಅರ್ಜಿ ಸಲ್ಲಿಸಿ", te: "దరఖాస్తు", hi: "आवेदन" },
+    again: { en: "Start again", kn: "ಮತ್ತೆ ಪ್ರಾರಂಭಿಸಿ", te: "మళ్ళీ మొదలు", hi: "फिर से शुरू करें" },
+    docs: { en: "Documents", kn: "ದಾಖಲೆಗಳು", te: "పత్రాలు", hi: "दस्तावेज़" },
+    empty: {
+      en: "Your matching schemes will appear here.",
+      kn: "ನಿಮಗೆ ಹೊಂದುವ ಯೋಜನೆಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.",
+      te: "మీకు సరిపోయే పథకాలు ఇక్కడ కనిపిస్తాయి.",
+      hi: "आपके लिए मिलती योजनाएं यहाँ दिखेंगी।"
+    },
+    none: {
+      en: "No matching scheme found. Try changing your answers.",
+      kn: "ಯಾವುದೇ ಯೋಜನೆ ಹೊಂದಿಕೆಯಾಗಿಲ್ಲ. ಉತ್ತರಗಳನ್ನು ಬದಲಾಯಿಸಿ ನೋಡಿ.",
+      te: "సరిపోయేది లేదు. జవాబులు మార్చి చూడండి.",
+      hi: "कोई मेल नहीं मिला। उत्तर बदलकर देखें।"
+    },
+    nu: {
+      en: "Sorry, could not understand. Please select an option or type clearly.",
+      kn: "ಕ್ಷಮಿಸಿ, ಅರ್ಥವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಆಯ್ಕೆಯನ್ನು ಒತ್ತಿ ಅಥವಾ ಸ್ಪಷ್ಟವಾಗಿ ಟೈಪ್ ಮಾಡಿ.",
+      te: "క్షమించండి, అర్థం కాలేదు. ఒక ఎంపికను నొక్కండి లేదా స్పష్టంగా టైప్ చేయండి.",
+      hi: "क्षमा करें, समझ नहीं आया। कोई विकल्प चुनें या स्पष्ट लिखें।"
+    },
+    nomic: {
+      en: "Voice recognition is not supported in this browser. Please type your input.",
+      kn: "ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಧ್ವನಿ ಗುರುತಿಸುವಿಕೆ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ಟೈಪ್ ಮಾಡಿ.",
+      te: "ఈ బ్రౌజర్‌లో వాయిస్ పని చేయదు. దయచేసి టైప్ చేయండి.",
+      hi: "इस ब्राउज़र में आवाज़ पहचान समर्थित नहीं है। कृपया लिखें।"
+    },
+    novoice: {
+      en: "Speech voice for this language is unavailable on this device.",
+      kn: "ಈ ಭಾಷೆಯ ಧ್ವನಿ ಈ ಸಾಧನದಲ್ಲಿ ಲಭ್ಯವಿಲ್ಲ.",
+      te: "మీ పరికరంలో ఈ భాష వాయిస్ లేదు.",
+      hi: "आपके डिवाइस में इस भाषा की आवाज़ उपलब्ध नहीं है।"
+    },
+    note: {
+      en: "Sample scheme information. Always verify eligibility on the official portal.",
+      kn: "ಮಾದರಿ ಯೋಜನೆ ಮಾಹಿತಿ. ಅಧಿಕೃತ ಜಾಲತಾಣದಲ್ಲಿ ವಿವರಗಳನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
+      te: "ఇది డెమో డేటా. అధికారిక సైట్‌లో నిర్ధారించుకోండి.",
+      hi: "यह डेमो डेटा है। आधिकारिक साइट पर विवरण जांच लें।"
+    },
+    fh: {
+      en: "Describe the crop problem",
+      kn: "ಬೆಳೆ ಸಮಸ್ಯೆಯನ್ನು ವಿವರಿಸಿ",
+      te: "పంట సమస్యను వివరించండి",
+      hi: "फसल की समस्या बताइए"
+    },
+    cropL: { en: "Crop", kn: "ಬೆಳೆ", te: "పంట", hi: "फसल" },
+    photoL: {
+      en: "Photo of the problem",
+      kn: "ಸಮಸ್ಯೆಯ ಫೋಟೋ",
+      te: "సమస్య ఫోటో",
+      hi: "समस्या की फोटो"
+    },
+    dropT: {
+      en: "Tap to take or upload a photo",
+      kn: "ಫೋಟೋ ತೆಗೆಯಲು ಅಥವಾ ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ಒತ್ತಿ",
+      te: "ఫోటో తీయడానికి లేదా అప్‌లోడ్ చేయడానికి నొక్కండి",
+      hi: "फोटो लेने या अपलोड करने के लिए टैप करें"
+    },
+    symL: {
+      en: "Select one or more symptoms you see",
+      kn: "ನಿಮಗೆ ಕಾಣಿಸುವ ಒಂದು ಅಥವಾ ಹೆಚ್ಚು ಲಕ್ಷಣಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+      te: "మీకు కనిపించే ఒకటి లేదా అంతకంటే ఎక్కువ లక్షణాలను ఎంచుకోండి",
+      hi: "आपको दिखने वाले एक या अधिक लक्षण चुनें"
+    },
+    audL: {
+      en: "Record audio description",
+      kn: "ಧ್ವನಿ ವಿವರಣೆಯನ್ನು ರೆಕಾರ್ಡ್ ಮಾಡಿ",
+      te: "ఆడియో వివరణ రికార్డ్ చేయండి",
+      hi: "ऑडियो विवरण रिकॉर्ड करें"
+    },
+    recStart: { en: "Record Audio", kn: "ಆಡಿಯೋ ರೆಕಾರ್ಡ್ ಮಾಡಿ", te: "ఆడియో రికార్డ్ చేయండి", hi: "ऑडियो रिकॉर्ड करें" },
+    recStop: { en: "Stop Recording", kn: "ರೆಕಾರ್ಡಿಂಗ್ ನಿಲ್ಲಿಸಿ", te: "రికార్డింగ్ ఆపండి", hi: "रिकॉर्डिंग रोकें" },
+    clearAudio: { en: "Clear Audio", kn: "ಆಡಿಯೋ ಅಳಿಸಿ", te: "ఆడియో తొలగించండి", hi: "ऑडियो हटाएं" },
+    recIdle: {
+      en: "No audio recorded yet. Tap Record Audio or select/type symptoms.",
+      kn: "ಇನ್ನೂ ಯಾವುದೇ ಆಡಿಯೋ ರೆಕಾರ್ಡ್ ಆಗಿಲ್ಲ. ರೆಕಾರ್ಡ್ ಒತ್ತಿ ಅಥವಾ ಲಕ್ಷಣ ಆಯ್ಕೆಮಾಡಿ/ಟೈಪ್ ಮಾಡಿ.",
+      te: "ఇంకా ఆడియో రికార్డ్ కాలేదు. రికార్డ్ నొక్కండి లేదా లక్షణాలు ఎంచుకోండి/టైప్ చేయండి.",
+      hi: "अभी कोई ऑडियो रिकॉर्ड नहीं हुआ है। रिकॉर्ड दबाएं या लक्षण चुनें/लिखें।"
+    },
+    recActive: {
+      en: "Recording audio… Speak clearly near the microphone.",
+      kn: "ಆಡಿಯೋ ರೆಕಾರ್ಡ್ ಆಗುತ್ತಿದೆ… ಮೈಕ್ರೊಫೋನ್ ಹತ್ತಿರ ಸ್ಪಷ್ಟವಾಗಿ ಮಾತನಾಡಿ.",
+      te: "ఆడియో రికార్డ్ అవుతోంది… మైక్రోఫోన్ దగ్గర స్పష్టంగా మాట్లాడండి.",
+      hi: "ऑडियो रिकॉर्ड हो रहा है… माइक्रोफोन के पास स्पष्ट बोलें।"
+    },
+    recDoneValid: {
+      en: "Audio recorded and voice signal detected. Ready to analyze.",
+      kn: "ಆಡಿಯೋ ರೆಕಾರ್ಡ್ ಆಗಿದೆ ಮತ್ತು ಧ್ವನಿ ಸಂಕೇತ ಪತ್ತೆಯಾಗಿದೆ. ವಿಶ್ಲೇಷಿಸಲು ಸಿದ್ಧವಾಗಿದೆ.",
+      te: "ఆడియో రికార్డ్ అయింది మరియు వాయిస్ సిగ్నల్ గుర్తించబడింది. విశ్లేషించడానికి సిద్ధం.",
+      hi: "ऑडियो रिकॉर्ड हो गया और आवाज़ संकेत मिला। विश्लेषण के लिए तैयार।"
+    },
+    recDoneSilent: {
+      en: "Audio file created, but no clear voice signal was detected. Please speak clearly or choose/type symptoms.",
+      kn: "ಆಡಿಯೋ ಫೈಲ್ ರಚನೆಯಾಗಿದೆ, ಆದರೆ ಸ್ಪಷ್ಟ ಧ್ವನಿ ಸಂಕೇತ ಪತ್ತೆಯಾಗಿಲ್ಲ. ದಯವಿಟ್ಟು ಸ್ಪಷ್ಟವಾಗಿ ಮಾತನಾಡಿ ಅಥವಾ ಲಕ್ಷಣ ಆಯ್ಕೆಮಾಡಿ/ಟೈಪ್ ಮಾಡಿ.",
+      te: "ఆడియో ఫైల్ రూపొందింది, కానీ స్పష్టమైన వాయిస్ సిగ్నల్ గుర్తించబడలేదు. దయచేసి స్పష్టంగా మాట్లాడండి లేదా లక్షణాలు ఎంచుకోండి/టైప్ చేయండి.",
+      hi: "ऑडियो फ़ाइल बनी है, लेकिन स्पष्ट आवाज़ संकेत नहीं मिला। कृपया स्पष्ट बोलें या लक्षण चुनें/लिखें।"
+    },
+    recErr: {
+      en: "Microphone access was blocked or unavailable. Please allow microphone permission or select/type symptoms.",
+      kn: "ಮೈಕ್ರೊಫೋನ್ ಅನುಮತಿ ನಿರಾಕರಿಸಲಾಗಿದೆ ಅಥವಾ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ಅನುಮತಿ ನೀಡಿ ಅಥವಾ ಲಕ್ಷಣ ಆಯ್ಕೆಮಾಡಿ/ಟైಪ್ ಮಾಡಿ.",
+      te: "మైక్రోఫోన్ అనుమతి నిరాకరించబడింది లేదా అందుబాటులో లేదు. దయచేసి అనుమతి ఇవ్వండి లేదా లక్షణాలు ఎంచుకోండి/టైప్ చేయండి.",
+      hi: "माइक्रोफ़ोन अनुमति नहीं मिली या उपलब्ध नहीं है। कृपया अनुमति दें या लक्षण चुनें/लिखें।"
+    },
+    noInputAtAll: {
+      en: "No recorded audio input or symptom selected. Please record clear audio, select one or more symptom chips, or type symptoms before checking.",
+      kn: "ಯಾವುದೇ ರೆಕಾರ್ಡ್ ಮಾಡಿದ ಆಡಿಯೋ ಇನ್‌ಪುಟ್ ಅಥವಾ ಲಕ್ಷಣ ಆಯ್ಕೆಯಾಗಿಲ್ಲ. ಪರೀಕ್ಷಿಸುವ ಮೊದಲು ಸ್ಪಷ್ಟ ಆಡಿಯೋ ರೆಕಾರ್ಡ್ ಮಾಡಿ, ಲಕ್ಷಣಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ ಅಥವಾ ಟೈಪ್ ಮಾಡಿ.",
+      te: "రికార్డ్ చేసిన ఆడియో ఇన్‌పుట్ లేదా లక్షణం ఎంచుకోలేదు. తనిఖీ చేసే ముందు స్పష్టమైన ఆడియో రికార్డ్ చేయండి, లక్షణాలు ఎంచుకోండి లేదా టైప్ చేయండి.",
+      hi: "कोई रिकॉर्ड किया गया ऑडियो इनपुट या लक्षण नहीं चुना गया है। जांच से पहले स्पष्ट ऑडियो रिकॉर्ड करें, लक्षण चुनें या लिखें।"
+    },
+    silentAudioNoSym: {
+      en: "Recorded audio input is empty or silent, and no symptoms were selected or typed. No diagnosis was generated from silent audio. Please speak clearly or select symptoms.",
+      kn: "ರೆಕಾರ್ಡ್ ಮಾಡಿದ ಆಡಿಯೋ ಖಾಲಿಯಾಗಿದೆ ಅಥವಾ ಮೌನವಾಗಿದೆ, ಮತ್ತು ಯಾವುದೇ ಲಕ್ಷಣವನ್ನು ಆಯ್ಕೆಮಾಡಿಲ್ಲ ಅಥವಾ ಟೈಪ್ ಮಾಡಿಲ್ಲ. ಮೌನ ಆಡಿಯೋದಿಂದ ಯಾವುದೇ ನಿರ್ಣಯ ನೀಡಿಲ್ಲ. ದಯವಿಟ್ಟು ಸ್ಪಷ್ಟವಾಗಿ ಮಾತನಾಡಿ ಅಥವಾ ಲಕ್ಷಣ ಆಯ್ಕೆಮಾಡಿ.",
+      te: "రికార్డ్ చేసిన ఆడియో ఖాళీగా లేదా నిశ్శబ్దంగా ఉంది మరియు లక్షణాలు ఎంచుకోలేదు లేదా టైప్ చేయలేదు. నిశ్శబ్ద ఆడియో నుండి నిర్ధారణ ఇవ్వలేదు. దయచేసి స్పష్టంగా మాట్లాడండి లేదా లక్షణాలు ఎంచుకోండి.",
+      hi: "रिकॉर्ड किया गया ऑडियो खाली या शांत है, और कोई लक्षण नहीं चुना या लिखा गया है। शांत ऑडियो से कोई निदान नहीं बनाया गया। कृपया स्पष्ट बोलें या लक्षण चुनें।"
+    },
+    audioOnlyNote: {
+      en: "Based on recorded audio input analysis (no specific symptom keyword matched; showing general crop health & leaf inspection guidance):",
+      kn: "ರೆಕಾರ್ಡ್ ಮಾಡಿದ ಆಡಿಯೋ ಇನ್‌ಪುಟ್ ವಿಶ್ಲೇಷಣೆಯ ಆಧಾರದ ಮೇಲೆ (ನಿರ್ದಿಷ್ಟ ಲಕ್ಷಣ ಪದ ಹೊಂದಿಕೆಯಾಗಿಲ್ಲ; ಸಾಮಾನ್ಯ ಬೆಳೆ ಆರೋಗ್ಯ ಮತ್ತು ಎಲೆ ತಪಾಸಣೆ ಮಾರ್ಗದರ್ಶನ):",
+      te: "రికార్డ్ చేసిన ఆడియో ఇన్‌పుట్ విశ్లేషణ ఆధారంగా (నిర్దిష్ట లక్షణ పదం సరిపోలలేదు; సాధారణ పంట ఆరోగ్యం మరియు ఆకు పరిశీలన మార్గదర్శకం):",
+      hi: "रिकॉर्ड किए गए ऑडियो इनपुट विश्लेषण के आधार पर (कोई विशिष्ट लक्षण शब्द नहीं मिला; सामान्य फसल स्वास्थ्य और पत्ती जांच मार्गदर्शन):"
+    },
+    analyze: {
+      en: "Check my crop",
+      kn: "ನನ್ನ ಬೆಳೆಯನ್ನು ಪರೀಕ್ಷಿಸಿ",
+      te: "నా పంటను చూడండి",
+      hi: "मेरी फसल जांचें"
+    },
+    fres: {
+      en: "Diagnosis and advice",
+      kn: "ನಿರ್ಣಯ ಮತ್ತು ಸಲಹೆ",
+      te: "నిర్ధారణ, సలహా",
+      hi: "निदान और सलाह"
+    },
+    fnote: {
+      en: "Guidance based on your selected symptoms, text/voice input, or recorded audio analysis.",
+      kn: "ನೀವು ಆಯ್ಕೆಮಾಡಿದ ಲಕ್ಷಣಗಳು, ಪಠ್ಯ/ಧ್ವನಿ ಇನ್‌ಪುಟ್ ಅಥವಾ ರೆಕಾರ್ಡ್ ಮಾಡಿದ ಆಡಿಯೋ ವಿಶ್ಲೇಷಣೆಯ ಆಧಾರದ ಮಾರ್ಗದರ್ಶನ.",
+      te: "మీరు ఎంచుకున్న లక్షణాలు, టెక్స్ట్/వాయిస్ లేదా రికార్డ్ చేసిన ఆడియో విశ్లేషణ ఆధారంగా సూచన.",
+      hi: "आपके चुने गए लक्षणों, टेक्स्ट/आवाज़ या रिकॉर्ड किए गए ऑडियो विश्लेषण पर आधारित मार्गदर्शन।"
+    },
+    fempty: {
+      en: "Your diagnosis will appear here.",
+      kn: "ನಿಮ್ಮ ಬೆಳೆ ನಿರ್ಣಯ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ.",
+      te: "మీ నిర్ధారణ ఇక్కడ కనిపిస్తుంది.",
+      hi: "आपका निदान यहाँ दिखेगा।"
+    },
+    sevN: { en: "Severity", kn: "ತೀವ್ರತೆ", te: "తీవ్రత", hi: "गंभीरता" },
+    overallSev: { en: "Overall severity", kn: "ಒಟ್ಟಾರೆ ತೀವ್ರತೆ", te: "మొత్తం తీవ్రత", hi: "कुल गंभीरता" },
+    selectedSymsLbl: {
+      en: "Selected symptoms",
+      kn: "ಆಯ್ಕೆಮಾಡಿದ ಲಕ್ಷಣಗಳು",
+      te: "ఎంచుకున్న లక్షణాలు",
+      hi: "चुने गए लक्षण"
+    },
+    sev: {
+      low: { en: "Low", kn: "ಕಡಿಮೆ", te: "తక్కువ", hi: "कम" },
+      medium: { en: "Medium", kn: "ಮಧ್ಯಮ", te: "మధ్యస్థం", hi: "मध्यम" },
+      high: { en: "High", kn: "ಹೆಚ್ಚು", te: "ఎక్కువ", hi: "अधिक" }
+    },
+    hToday: {
+      en: "What to do today",
+      kn: "ಇಂದು ಏನು ಮಾಡಬೇಕು",
+      te: "ఈరోజు ఏం చేయాలి",
+      hi: "आज क्या करें"
+    },
+    hOrg: {
+      en: "Low-cost and organic options",
+      kn: "ಕಡಿಮೆ ವೆಚ್ಚದ ಮತ್ತು ಸಾವಯವ ವಿಧಾನಗಳು",
+      te: "తక్కువ ఖర్చు, సేంద్రీయ మార్గాలు",
+      hi: "कम खर्च और जैविक उपाय"
+    },
+    hChem: {
+      en: "Chemical options (only if needed)",
+      kn: "ರಾಸಾಯನಿಕ ಔಷಧಗಳು (ಅಗತ್ಯವಿದ್ದರೆ ಮಾತ್ರ)",
+      te: "రసాయన మందులు (అవసరమైతేనే)",
+      hi: "रासायनिक दवाएं (जरूरत हो तो)"
+    },
+    hBuy: {
+      en: "Where to buy",
+      kn: "ಎಲ್ಲಿ ಖರೀದಿಸಬೇಕು",
+      te: "ఎక్కడ కొనాలి",
+      hi: "कहां से खरीदें"
+    },
+    hSafe: {
+      en: "Safety first",
+      kn: "ಸುರಕ್ಷತೆ ಮೊದಲು",
+      te: "భద్రత ముఖ్యం",
+      hi: "सुरक्षा पहले"
+    },
+    safe: {
+      en: "Wear gloves, a mask and full sleeves. Keep chemicals away from children and food. Follow the label exactly. Never mix pesticides yourself. Check the waiting period before harvest.",
+      kn: "ಕೈಗವಸು, ಮಾಸ್ಕ್ ಮತ್ತು ಪೂರ್ಣ ತೋಳಿನ ಬಟ್ಟೆ ಧರಿಸಿ. ಔಷಧಗಳನ್ನು ಮಕ್ಕಳು ಮತ್ತು ಆಹಾರದಿಂದ ದೂರವಿಡಿ. ಲೇಬಲ್ ಸೂಚನೆಗಳನ್ನು ಕಟ್ಟುನಿಟ್ಟಾಗಿ ಪಾಲಿಸಿ. ನೀವೇ ಕೀಟನಾಶಕಗಳನ್ನು ಬೆರೆಸಬೇಡಿ. ಕೊಯ್ಲಿಗೆ ಮುನ್ನ ಕಾಯುವ ಅವಧಿಯನ್ನು ಗಮನಿಸಿ.",
+      te: "చేతి తొడుగులు, మాస్క్, పొడవు చేతుల దుస్తులు ధరించండి. మందులను పిల్లలు, ఆహారానికి దూరంగా ఉంచండి. లేబుల్ సూచనలు పాటించండి. మీరే మందులు కలపకండి. కోతకు ముందు వేచి ఉండే కాలం చూడండి.",
+      hi: "दस्ताने, मास्क और पूरी बाजू के कपड़े पहनें। दवाएं बच्चों और खाने से दूर रखें। लेबल के निर्देश मानें। खुद दवाएं न मिलाएं। कटाई से पहले प्रतीक्षा अवधि देखें।"
+    },
+    disc: {
+      en: "Guidance only, not a final diagnosis. Confirm with your agriculture officer or Krishi Vigyan Kendra before spraying.",
+      kn: "ಇದು ಮಾರ್ಗದರ್ಶನ ಮಾತ್ರ, ಅಂತಿಮ ನಿರ್ಣಯವಲ್ಲ. ಸಿಂಪರಣೆಗೆ ಮೊದಲು ಕೃಷಿ ಅಧಿಕಾರಿ ಅಥವಾ ಕೃಷಿ ವಿಜ್ಞಾನ ಕೇಂದ್ರವನ್ನು ಸಂಪರ್ಕಿಸಿ.",
+      te: "ఇది సూచన మాత్రమే. పిచికారీ ముందు వ్యవసాయ అధికారిని లేదా కృషి విజ్ఞాన కేంద్రాన్ని సంప్రదించండి.",
+      hi: "यह केवल सुझाव है, अंतिम निदान नहीं। छिड़काव से पहले कृषि अधिकारी या कृषि विज्ञान केंद्र से पुष्टि करें।"
+    },
+    band: {
+      en: "Check the colour band on the label:",
+      kn: "ಲೇಬಲ್ ಮೇಲಿನ ಬಣ್ಣದ ಪಟ್ಟಿಯನ್ನು ಪರಿಶೀಲಿಸಿ:",
+      te: "లేబుల్‌పై రంగు బ్యాండ్ చూడండి:",
+      hi: "लेबल पर रंग पट्टी देखें:"
+    },
+    price: {
+      en: "Approximate price: verify at local agro store",
+      kn: "ಅಂದಾಜು ಬೆಲೆ: ಸ್ಥಳೀಯ ಕೃಷಿ ಮಳಿಗೆಯಲ್ಲಿ ಪರಿಶೀಲಿಸಿ",
+      te: "సుమారు ధర: స్థానిక అగ్రో దుకాణంలో చూడండి",
+      hi: "अनुमानित कीमत: स्थानीय कृषि केंद्र पर जांचें"
+    },
+    shopT: {
+      en: "Authorized Agro Input Center",
+      kn: "ಅಧಿಕೃತ ಕೃಷಿ ಪರಿಕರ ಕೇಂದ್ರ",
+      te: "అధీకృత అగ్రో కేంద్రం",
+      hi: "अधिकृत कृषि केंद्र"
+    },
+    adr: {
+      en: "Village, Taluk / Mandal, District",
+      kn: "ಗ್ರಾಮ, ತಾಲೂಕು, ಜಿಲ್ಲೆ",
+      te: "గ్రామం, మండలం, జిల్లా",
+      hi: "गांव, तालुका / मंडल, जिला"
+    },
+    near: {
+      en: "Find shops near me",
+      kn: "ನನ್ನ ಹತ್ತಿರದ ಮಳಿಗೆಗಳನ್ನು ಹುಡುಕಿ",
+      te: "నా దగ్గర షాపులు",
+      hi: "मेरे पास की दुकानें"
+    },
+    chk: {
+      en: "Analysing crop inputs…",
+      kn: "ಬೆಳೆ ವಿವರಗಳನ್ನು ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ…",
+      te: "పరిశీలిస్తోంది…",
+      hi: "जांच हो रही है…"
+    }
+  };
+
+  var CROPS = [
+    { v: "Paddy", l: { en: "Paddy (Rice)", kn: "ಭತ್ತ", te: "వరి", hi: "धान" } },
+    { v: "Cotton", l: { en: "Cotton", kn: "ಹತ್ತಿ", te: "పత్తి", hi: "कपास" } },
+    { v: "Chilli", l: { en: "Chilli", kn: "ಮೆಣಸಿನಕಾಯಿ", te: "మిర్చి", hi: "मिर्च" } },
+    { v: "Groundnut", l: { en: "Groundnut", kn: "ಶೇಂಗಾ (ನೆಲಗಡಲೆ)", te: "వేరుశనగ", hi: "मूंगफली" } },
+    { v: "Maize", l: { en: "Maize", kn: "ಮೆಕ್ಕೆಜೋಳ", te: "మొక్కజొన్న", hi: "मक्का" } },
+    { v: "Tomato", l: { en: "Tomato", kn: "ಟೊಮೇಟೊ", te: "టమాటా", hi: "टमाटर" } },
+    { v: "Sugarcane", l: { en: "Sugarcane", kn: "ಕಬ್ಬು", te: "చెరకు", hi: "गन्ना" } },
+    { v: "Banana", l: { en: "Banana", kn: "ಬಾಳೆ", te: "అరటి", hi: "केला" } }
+  ];
+
+  var Q = [
+    {
+      k: "occ",
+      q: {
+        en: "Who are you?",
+        kn: "ನೀವು ಯಾರು?",
+        te: "మీరు ఎవరు?",
+        hi: "आप कौन हैं?"
+      },
+      o: [
+        ["farmer", { en: "Farmer", kn: "ರೈತ / ರೈತ ಮಹಿಳೆ", te: "రైతు", hi: "किसान" }],
+        ["student", { en: "Student", kn: "ವಿದ್ಯಾರ್ಥಿ", te: "విద్యార్థి", hi: "छात्र" }],
+        ["woman", { en: "Woman / family", kn: "ಮಹಿಳೆ / ಕುಟುಂಬ", te: "మహిళ / కుటుంబం", hi: "महिला / परिवार" }],
+        ["biz", { en: "Small business", kn: "ಸಣ್ಣ ಉದ್ಯಮ", te: "చిన్న వ్యాపారం", hi: "छोटा व्यवसाय" }],
+        ["other", { en: "Other", kn: "ಇತರೆ", te: "ఇతర", hi: "अन्य" }]
+      ]
+    },
+    {
+      k: "inc",
+      q: {
+        en: "Yearly family income?",
+        kn: "ಕುಟುಂಬದ ವಾರ್ಷಿಕ ಆದಾಯ?",
+        te: "కుటుంబ వార్షిక ఆదాయం?",
+        hi: "परिवार की सालाना आय?"
+      },
+      o: [
+        ["low", { en: "Below ₹3 lakh", kn: "₹3 ಲಕ್ಷಕ್ಕಿಂತ ಕಡಿಮೆ", te: "₹3 లక్షల కంటే తక్కువ", hi: "₹3 लाख से कम" }],
+        ["high", { en: "₹3 lakh or more", kn: "₹3 ಲಕ್ಷ ಅಥವಾ ಹೆಚ್ಚು", te: "₹3 లక్షలు లేదా ఎక్కువ", hi: "₹3 लाख या अधिक" }]
+      ]
+    },
+    {
+      k: "age",
+      q: {
+        en: "Your age group?",
+        kn: "ನಿಮ್ಮ ವಯಸ್ಸಿನ ಗುಂಪು?",
+        te: "మీ వయస్సు?",
+        hi: "आपकी आयु?"
+      },
+      o: [
+        ["u18", { en: "Under 18", kn: "18 ವರ್ಷದೊಳಗೆ", te: "18 లోపు", hi: "18 से कम" }],
+        ["adult", { en: "18–59", kn: "18–59", te: "18–59", hi: "18–59" }],
+        ["senior", { en: "60 or above", kn: "60 ಅಥವಾ ಮೇಲ್ಪಟ್ಟು", te: "60 లేదా ఎక్కువ", hi: "60 या अधिक" }]
+      ]
+    }
+  ];
+
+  var S = [
+    {
+      occ: ["farmer"],
+      n: { en: "PM-KISAN", kn: "ಪಿಎಂ-ಕಿಸಾನ್", te: "పీఎం-కిసాన్", hi: "पीएम-किसान" },
+      b: {
+        en: "₹6,000 a year to farmer families, paid in three instalments.",
+        kn: "ರೈತ ಕುಟುಂಬಗಳಿಗೆ ವಾರ್ಷಿಕ ₹6,000, ಮೂರು ಕಂತುಗಳಲ್ಲಿ ನೀಡಲಾಗುತ್ತದೆ.",
+        te: "రైతు కుటుంబాలకు ఏటా ₹6,000, మూడు విడతల్లో.",
+        hi: "किसान परिवारों को सालाना ₹6,000, तीन किस्तों में।"
+      },
+      d: {
+        en: "Aadhaar, land records, bank passbook",
+        kn: "ಆಧಾರ್, ಭೂ ದಾಖಲೆಗಳು, ಬ್ಯಾಂಕ್ ಪಾಸ್‌ಬುಕ್",
+        te: "Aadhaar, land records, bank passbook",
+        hi: "आधार, भूमि रिकॉर्ड, बैंक पासबुक"
+      },
+      u: "https://pmkisan.gov.in"
+    },
+    {
+      occ: ["farmer"],
+      n: { en: "PM Fasal Bima", kn: "ಪಿಎಂ ಫಸಲ್ ಬೀಮಾ", te: "పీఎం ఫసల్ బీమా", hi: "पीएम फसल बीमा" },
+      b: {
+        en: "Insurance cover for crop loss due to natural calamities.",
+        kn: "ಪ್ರಕೃತಿ ವಿಕೋಪಗಳಿಂದ ಉಂಟಾಗುವ ಬೆಳೆ ನಷ್ಟಕ್ಕೆ ವಿಮಾ ರಕ್ಷಣೆ.",
+        te: "పంట నష్టానికి బీమా.",
+        hi: "फसल नुकसान पर बीमा।"
+      },
+      d: {
+        en: "Aadhaar, land records, sowing details",
+        kn: "ಆಧಾರ್, ಭೂ ದಾಖಲೆಗಳು, ಬಿತ್ತನೆ ವಿವರಗಳು",
+        te: "Aadhaar, land records, sowing details",
+        hi: "आधार, भूमि रिकॉर्ड, बुवाई विवरण"
+      },
+      u: "https://pmfby.gov.in"
+    },
+    {
+      inc: ["low"],
+      n: { en: "Ayushman Bharat (PM-JAY)", kn: "ಆಯುಷ್ಮಾನ್ ಭಾರತ್ (ಪಿಎಂ-ಜೆಎವೈ)", te: "ఆయుష్మాన్ భారత్", hi: "आयुष्मान भारत" },
+      b: {
+        en: "Health cover up to ₹5 lakh a year for eligible families.",
+        kn: "ಅರ್ಹ ಕುಟುಂಬಗಳಿಗೆ ವಾರ್ಷಿಕ ₹5 ಲಕ್ಷದವರೆಗೆ ಆರೋಗ್ಯ ರಕ್ಷಣೆ.",
+        te: "అర్హత గల కుటుంబాలకు ఏటా ₹5 లక్షల వరకు ఆరోగ్య బీమా.",
+        hi: "पात्र परिवारों को सालाना ₹5 लाख तक स्वास्थ्य बीमा।"
+      },
+      d: {
+        en: "Aadhaar, ration card",
+        kn: "ಆಧಾರ್, ಪಡಿತರ ಚೀಟಿ",
+        te: "Aadhaar, ration card",
+        hi: "आधार, राशन कार्ड"
+      },
+      u: "https://pmjay.gov.in"
+    },
+    {
+      occ: ["woman"],
+      inc: ["low"],
+      n: { en: "PM Ujjwala Yojana", kn: "ಪಿಎಂ ಉಜ್ವಲ ಯೋಜನೆ", te: "ఉజ్వల యోజన", hi: "उज्ज्वला योजना" },
+      b: {
+        en: "Free LPG connection for women from low-income homes.",
+        kn: "ಕಡಿಮೆ ಆದಾಯದ ಮನೆಗಳ ಮಹಿಳೆಯರಿಗೆ ಉಚಿತ ಎಲ್‌ಪಿಜಿ ಸಂಪರ್ಕ.",
+        te: "పేద కుటుంబాల మహిళలకు ఉచిత ఎల్‌పీజీ కనెక్షన్.",
+        hi: "गरीब परिवारों की महिलाओं को मुफ्त एलपीजी कनेक्शन।"
+      },
+      d: {
+        en: "Aadhaar, ration card, bank passbook",
+        kn: "ಆಧಾರ್, ಪಡಿತರ ಚೀಟಿ, ಬ್ಯಾಂಕ್ ಪಾಸ್‌ಬುಕ್",
+        te: "Aadhaar, ration card, bank passbook",
+        hi: "आधार, राशन कार्ड, बैंक पासबुक"
+      },
+      u: "https://pmuy.gov.in"
+    },
+    {
+      occ: ["woman"],
+      n: { en: "Sukanya Samriddhi", kn: "ಸುಕನ್ಯಾ ಸಮೃದ್ಧಿ ಯೋಜನೆ", te: "సుకన్య సమృద్ధి", hi: "सुकन्या समृद्धि" },
+      b: {
+        en: "Savings account for a girl child, with attractive interest.",
+        kn: "ಹೆಣ್ಣು ಮಗುವಿನ ಭವಿಷ್ಯಕ್ಕಾಗಿ ಉತ್ತಮ ಬಡ್ಡಿಯ ಉಳಿತಾಯ ಖಾತೆ.",
+        te: "ఆడపిల్ల పేరుతో అధిక వడ్డీతో పొదుపు ఖాతా.",
+        hi: "बेटी के नाम पर ऊँचे ब्याज वाला बचत खाता।"
+      },
+      d: {
+        en: "Girl birth certificate, parent ID",
+        kn: "ಮಗುವಿನ ಜನನ ಪ್ರಮಾಣಪತ್ರ, ಪೋಷಕರ ಗುರುತಿನ ಚೀಟಿ",
+        te: "Girl birth certificate, parent ID",
+        hi: "बच्ची का जन्म प्रमाण पत्र, अभिभावक पहचान पत्र"
+      },
+      u: "https://www.indiapost.gov.in"
+    },
+    {
+      occ: ["biz"],
+      n: { en: "Mudra Yojana", kn: "ಮುದ್ರಾ ಯೋಜನೆ", te: "ముద్ర యోజన", hi: "मुद्रा योजना" },
+      b: {
+        en: "Collateral-free loans for small businesses and micro enterprises.",
+        kn: "ಸಣ್ಣ ಉದ್ಯಮಗಳಿಗೆ ಯಾವುದೇ ಭದ್ರತೆ ಇಲ್ಲದೆ ಸಾಲ ಸೌಲಭ್ಯ.",
+        te: "చిన్న వ్యాపారాలకు పూచీకత్తు లేని రుణాలు.",
+        hi: "छोटे व्यवसायों के लिए बिना गारंटी ऋण।"
+      },
+      d: {
+        en: "Aadhaar, PAN, business proof",
+        kn: "ಆಧಾರ್, ಪ್ಯಾನ್, ಉದ್ಯಮ ದೃಢೀಕರಣ",
+        te: "Aadhaar, PAN, business proof",
+        hi: "आधार, पैन, व्यवसाय प्रमाण"
+      },
+      u: "https://www.mudra.org.in"
+    },
+    {
+      occ: ["student"],
+      n: { en: "National Scholarship Portal", kn: "ರಾಷ್ಟ್ರೀಯ ವಿದ್ಯಾರ್ಥಿವೇತನ ಪೋರ್ಟಲ್", te: "నేషనల్ స్కాలర్‌షిప్", hi: "नेशनल स्कॉलरशिप" },
+      b: {
+        en: "Scholarships for eligible school and college students.",
+        kn: "ಅರ್ಹ ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ವಿದ್ಯಾರ್ಥಿವೇತನ ಸೌಲಭ್ಯ.",
+        te: "విద్యార్థులకు ఉపకార వేతనాలు.",
+        hi: "छात्रों के लिए छात्रवृत्ति।"
+      },
+      d: {
+        en: "Aadhaar, marks memo, income certificate",
+        kn: "ಆಧಾರ್, ಅಂಕಪಟ್ಟಿ, ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ",
+        te: "Aadhaar, marks memo, income certificate",
+        hi: "आधार, अंकपत्र, आय प्रमाण पत्र"
+      },
+      u: "https://scholarships.gov.in"
+    },
+    {
+      inc: ["low"],
+      age: ["senior"],
+      n: { en: "Old-age pension (NSAP)", kn: "ವೃದ್ಧಾಪ್ಯ ವೇತನ (ಎನ್‌ಎಸ್‌ಎಪಿ)", te: "వృద్ధాప్య పింఛను", hi: "वृद्धावस्था पेंशन" },
+      b: {
+        en: "Monthly pension support for senior citizens from low-income families.",
+        kn: "ಕಡಿಮೆ ಆದಾಯದ ಕುಟುಂಬಗಳ ಹಿರಿಯ ನಾಗರಿಕರಿಗೆ ಮಾಸಿಕ ಪಿಂಚಣಿ.",
+        te: "పేద వృద్ధులకు నెలవారీ పింఛను.",
+        hi: "गरीब बुजुर्गों को मासिक पेंशन।"
+      },
+      d: {
+        en: "Aadhaar, age proof, income proof",
+        kn: "ಆಧಾರ್, ವಯಸ್ಸಿನ ಪುರಾವೆ, ಆದಾಯ ಪ್ರಮಾಣಪತ್ರ",
+        te: "Aadhaar, age proof, income proof",
+        hi: "आधार, आयु प्रमाण, आय प्रमाण"
+      },
+      u: "https://nsap.nic.in"
+    }
+  ];
+
+  // Crop symptoms & localized advice in en, kn, te, hi
+  var C = {
+    spots: {
+      l: { en: "Brown spots on leaves", kn: "ಎಲೆಗಳ ಮೇಲೆ ಕಂದು ಕಲೆಗಳು", te: "ఆకులపై గోధుమ మచ్చలు", hi: "पत्तियों पर भूरे धब्बे" },
+      n: { en: "Leaf spot (fungal)", kn: "ಎಲೆ ಕಲೆ ರೋಗ (ಶಿಲೀಂಧ್ರ)", te: "ఆకు మచ్చ తెగులు", hi: "पत्ती धब्बा रोग" },
+      sv: "medium",
+      t: {
+        en: ["Remove and destroy badly spotted leaves.", "Avoid overhead watering; water near the base."],
+        kn: ["ಹೆಚ್ಚು ಕಲೆಗಳಿರುವ ಎಲೆಗಳನ್ನು ತೆಗೆದು ನಾಶಪಡಿಸಿ.", "ಮೇಲಿನಿಂದ ನೀರು ಹಾಯಿಸುವುದನ್ನು ತಪ್ಪಿಸಿ; ಬುಡಕ್ಕೆ ನೀರು ನೀಡಿ."],
+        te: ["తీవ్రంగా మచ్చలున్న ఆకులను తొలగించండి.", "పైనుంచి నీరు పోయకుండా మొదలుకు నీరు ఇవ్వండి."],
+        hi: ["अधिक धब्बे वाली पत्तियों को हटाकर नष्ट करें।", "ऊपर से सिंचाई न करें; जड़ के पास पानी दें।"]
+      },
+      o: {
+        en: ["Spray neem oil solution in the cool evening.", "Maintain spacing for good air circulation."],
+        kn: ["ಸಂಜೆ ವೇಳೆ ಬೇವಿನ ಎಣ್ಣೆ ದ್ರಾವಣ ಸಿಂಪಡಿಸಿ.", "ಗಾಳಿಯಾಡಲು ಸಾಕಷ್ಟು ಅಂತರ ಇರಿಸಿ."],
+        te: ["సాయంత్రం వేళ వేప నూనె ద్రావణం పిచికారీ చేయండి.", "గాలి ప్రసరణ కోసం మొక్కల మధ్య దూరం ఉంచండి."],
+        hi: ["शाम के समय नीम तेल का घोल छिड़कें।", "हवा के लिए पौधों के बीच दूरी रखें।"]
+      },
+      c: {
+        en: ["Mancozeb", "Copper oxychloride"],
+        kn: ["ಮ್ಯಾಂಕೋಜೆಬ್ (Mancozeb)", "ಕಾಪರ್ ಆಕ್ಸಿಕ್ಲೋರೈಡ್ (Copper oxychloride)"],
+        te: ["Mancozeb", "Copper oxychloride"],
+        hi: ["Mancozeb", "Copper oxychloride"]
+      }
+    },
+    yellow: {
+      l: { en: "Yellow leaves", kn: "ಎಲೆಗಳು ಹಳದಿಯಾಗುವುದು", te: "ఆకులు పసుపు", hi: "पीली पत्तियां" },
+      n: { en: "Nutrient shortage or waterlogging", kn: "ಪೋಷಕಾಂಶ ಕೊರತೆ ಅಥವಾ ನೀರು ನಿಲ್ಲುವುದು", te: "పోషక లోపం లేదా నీరు నిలవడం", hi: "पोषक कमी या जलभराव" },
+      sv: "low",
+      t: {
+        en: ["Drain standing water from the field.", "Test soil health at a nearby soil testing center."],
+        kn: ["ಹೊಲದಲ್ಲಿ ನಿಂತ ಹೆಚ್ಚುವರಿ ನೀರನ್ನು ಬಸಿದು ಬಿಡಿ.", "ಹತ್ತಿರದ ಮಣ್ಣು ಪರೀಕ್ಷಾ ಕೇಂದ್ರದಲ್ಲಿ ಮಣ್ಣನ್ನು ಪರೀಕ್ಷಿಸಿ."],
+        te: ["పొలంలో నిలిచిన నీటిని బయటకు పంపండి.", "సమీప మట్టి పరీక్ష కేంద్రంలో మట్టిని తనిఖీ చేయండి."],
+        hi: ["खेत से अतिरिक्त पानी निकाल दें।", "पास की मृदा परीक्षण प्रयोगशाला में मिट्टी जांच कराएं।"]
+      },
+      o: {
+        en: ["Apply well-decomposed compost or farmyard manure.", "Use mulch to retain soil moisture evenly."],
+        kn: ["ಚೆನ್ನಾಗಿ ಕೊಳೆತ ಕೊಟ್ಟಿಗೆ ಗೊಬ್ಬರ ಅಥವಾ ಕಾಂಪೋಸ್ಟ್ ಬಳಸಿ.", "ಮಣ್ಣಿನ ತೇವಾಂಶ ಉಳಿಸಲು ಮಲ್ಚಿಂಗ್ ಮಾಡಿ."],
+        te: ["బాగా చిలికిన కంపోస్ట్ లేదా పశువుల ఎరువు వేయండి.", "నేలలో తేమ నిలవడానికి మల్చింగ్ చేయండి."],
+        hi: ["अच्छी तरह सड़ी गोबर की खाद या कम्पोस्ट डालें।", "नमी बनाए रखने के लिए पलवार (मल्च) का उपयोग करें।"]
+      },
+      c: { en: [], kn: [], te: [], hi: [] }
+    },
+    holes: {
+      l: { en: "Holes in leaves", kn: "ಎಲೆಗಳಲ್ಲಿ ರಂಧ್ರಗಳು", te: "ఆకులకు రంధ్రాలు", hi: "पत्तियों में छेद" },
+      n: { en: "Leaf-eating caterpillars", kn: "ಎಲೆ ತಿನ್ನುವ ಕಂಬಳಿ ಹುಳುಗಳು", te: "ఆకు తినే పురుగులు", hi: "पत्ती खाने वाले कीट" },
+      sv: "medium",
+      t: {
+        en: ["Inspect underside of leaves in morning/evening.", "Hand-pick visible larvae and egg masses."],
+        kn: ["ಬೆಳಿಗ್ಗೆ ಅಥವಾ ಸಂಜೆ ಎಲೆಗಳ ಹಿಂಭಾಗವನ್ನು ಪರೀಕ್ಷಿಸಿ.", "ಕಾಣಿಸುವ ಹುಳುಗಳು ಮತ್ತು ಮೊಟ್ಟೆಗಳನ್ನು ಕೈಯಿಂದ ತೆಗೆಯಿರಿ."],
+        te: ["ఉదయం లేదా సాయంత్రం ఆకుల కింది భాగం చూడండి.", "కనిపించే పురుగులను చేతితో ఏరివేయండి."],
+        hi: ["सुबह या शाम पत्तियों की निचली सतह जांचें।", "दिखने वाली सुंडियों को हाथ से हटाएं।"]
+      },
+      o: {
+        en: ["Spray neem seed kernel extract (NSKE).", "Install pheromone or light traps in the field."],
+        kn: ["ಬೇವಿನ ಬೀಜದ ಕಷಾಯ (NSKE) ಸಿಂಪಡಿಸಿ.", "ಹೊಲದಲ್ಲಿ ಫೆರೋಮೋನ್ ಅಥವಾ ಬೆಳಕಿನ ಬಲೆಗಳನ್ನು ಅಳವಡಿಸಿ."],
+        te: ["వేప గింజల కషాయం (NSKE) పిచికారీ చేయండి.", "పొలంలో ఎర / ట్రాప్‌లు ఏర్పాటు చేయండి."],
+        hi: ["नीम बीज अर्क (NSKE) का छिड़काव करें।", "खेत में फेरोमोन या प्रकाश ट्रैप लगाएं।"]
+      },
+      c: {
+        en: ["Emamectin benzoate"],
+        kn: ["ಎಮಾಮೆಕ್ಟಿನ್ ಬೆಂಜೋಯೇಟ್ (Emamectin benzoate)"],
+        te: ["Emamectin benzoate"],
+        hi: ["Emamectin benzoate"]
+      }
+    },
+    white: {
+      l: { en: "White powder", kn: "ಬಿಳಿ ಪುಡಿ ಕಾಣಿಸುವುದು", te: "తెల్లని పొడి", hi: "सफेद पाउडर" },
+      n: { en: "Powdery mildew", kn: "ಬೂದಿ ರೋಗ (Powdery mildew)", te: "బూడిద తెగులు", hi: "चूर्णिल आसिता रोग" },
+      sv: "medium",
+      t: {
+        en: ["Prune heavily coated leaves safely.", "Improve sunlight and spacing between plants."],
+        kn: ["ಹೆಚ್ಚು ಬಿಳಿ ಪುಡಿ ಇರುವ ಎಲೆಗಳನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ತೆಗೆಯಿರಿ.", "ಗಿಡಗಳಿಗೆ ಸೂರ್ಯನ ಬೆಳಕು ಮತ್ತು ಗಾಳಿ ಸರಿಯಾಗಿ ಬೀಳುವಂತೆ ನೋಡಿ."],
+        te: ["ఎక్కువగా తెల్లని పొడి ఉన్న ఆకులను తొలగించండి.", "మొక్కలకు గాలి, వెలుతురు అందేలా చూడండి."],
+        hi: ["अधिक प्रभावित पत्तियों को हटाएं।", "पौधों के बीच हवा और धूप आने दें।"]
+      },
+      o: {
+        en: ["Spray diluted sour buttermilk or neem oil.", "Avoid excess nitrogen fertilizer."],
+        kn: ["ಹುಳಿ ಮಜ್ಜಿಗೆ ಅಥವಾ ಬೇವಿನ ಎಣ್ಣೆ ದ್ರಾವಣ ಸಿಂಪಡಿಸಿ.", "ಸಾರಜನಕ ಗೊಬ್ಬರವನ್ನು ಅತಿಯಾಗಿ ಬಳಸಬೇಡಿ."],
+        te: ["పుల్లటి మజ్జిగ లేదా వేప నూనె ద్రావణం పిచికారీ చేయండి.", "నత్రజని ఎరువు ఎక్కువగా వేయవద్దు."],
+        hi: ["खट्टी छाछ या नीम तेल का घोल छिड़कें।", "नाइट्रोजन खाद अधिक न डालें।"]
+      },
+      c: {
+        en: ["Wettable sulphur"],
+        kn: ["ವೆಟೆಬಲ್ ಸಲ್ಫರ್ (Wettable sulphur)"],
+        te: ["Wettable sulphur"],
+        hi: ["Wettable sulphur"]
+      }
+    },
+    wilt: {
+      l: { en: "Plant wilting", kn: "ಗಿಡ ಬಾಡುವುದು", te: "మొక్క వాడిపోవడం", hi: "पौधा मुरझाना" },
+      n: { en: "Wilt or root rot", kn: "ಸೊರಗು ರೋಗ ಅಥವಾ ಬೇರು ಕೊಳೆತ", te: "వడలు తెగులు / వేరు కుళ్ళు", hi: "उकठा या जड़ सड़न" },
+      sv: "high",
+      t: {
+        en: ["Uproot severely wilted plants away from healthy ones.", "Improve soil drainage immediately."],
+        kn: ["ತೀವ್ರವಾಗಿ ಬಾಡಿದ ಗಿಡಗಳನ್ನು ಆರೋಗ್ಯವಂತ ಗಿಡಗಳಿಂದ ದೂರ ಕಿತ್ತು ನಾಶಪಡಿಸಿ.", "ತಕ್ಷಣ ಮಣ್ಣಿನಲ್ಲಿ ನೀರು ಬಸಿದು ಹೋಗುವ ವ್ಯವಸ್ಥೆ ಮಾಡಿ."],
+        te: ["బాగా వాడిన మొక్కలను తొలగించండి.", "వెంటనే నీరు నిలవకుండా డ్రైనేజీ సరిచేయండి."],
+        hi: ["अधिक मुरझाए पौधों को उखाड़कर अलग करें।", "तुरंत जल निकासी सुधारें।"]
+      },
+      o: {
+        en: ["Apply Trichoderma bio-agent with organic manure.", "Practice crop rotation in the next season."],
+        kn: ["ಸಾವಯವ ಗೊಬ್ಬರದೊಂದಿಗೆ ಟ್ರೈಕೋಡರ್ಮಾ (Trichoderma) ಬಳಸಿ.", "ಮುಂದಿನ ಋತುವಿನಲ್ಲಿ ಬೆಳೆ ಬದಲಾವಣೆ (Crop rotation) ಮಾಡಿ."],
+        te: ["సేంద్రియ ఎరువుతో ట్రైకోడెర్మా వాడండి.", "తదుపరి పంటలో పంట మార్పిడి చేయండి."],
+        hi: ["जैविक खाद के साथ ट्राइकोडर्मा मिलाएं।", "अगले मौसम में फसल चक्र अपनाएं।"]
+      },
+      c: {
+        en: ["Copper oxychloride"],
+        kn: ["ಕಾಪರ್ ಆಕ್ಸಿಕ್ಲೋರೈಡ್ (Copper oxychloride)"],
+        te: ["Copper oxychloride"],
+        hi: ["Copper oxychloride"]
+      }
+    }
+  };
+
+  var LC = { en: "en-IN", kn: "kn-IN", te: "te-IN", hi: "hi-IN" };
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  function setStatusMsg(txt, isWarn) {
+    var activeMain = $("vf").classList.contains("hide") ? $("note") : $("fnote");
+    activeMain.textContent = txt;
+    if (isWarn) {
+      activeMain.classList.add("status-banner", "warn");
+    } else {
+      activeMain.classList.remove("status-banner", "warn");
+    }
+  }
+
+  function speak(text) {
+    if (!window.speechSynthesis) {
+      setStatusMsg(T.novoice[L], true);
+      return;
+    }
+    try {
+      speechSynthesis.cancel();
+      var targetLang = LC[L];
+      var utter = new SpeechSynthesisUtterance(text);
+      utter.lang = targetLang;
+      var voices = speechSynthesis.getVoices() || [];
+      var prefix = targetLang.slice(0, 2).toLowerCase();
+      var matchedVoice = null;
+      for (var i = 0; i < voices.length; i++) {
+        var vLang = (voices[i].lang || "").replace("_", "-").toLowerCase();
+        if (vLang === targetLang.toLowerCase() || vLang.indexOf(prefix) === 0) {
+          matchedVoice = voices[i];
+          break;
+        }
+      }
+      if (matchedVoice) {
+        utter.voice = matchedVoice;
+      } else if (voices.length > 0) {
+        setStatusMsg(T.novoice[L], true);
+      }
+      speechSynthesis.speak(utter);
+    } catch (err) {
+      setStatusMsg(T.novoice[L], true);
+    }
+  }
+
+  if (window.speechSynthesis && typeof speechSynthesis.onvoiceschanged !== "undefined") {
+    speechSynthesis.onvoiceschanged = function () {};
+  }
+
+  function matchSchemes() {
+    return S.filter(function (s) {
+      return (!s.occ || (ans.occ && s.occ.indexOf(ans.occ) > -1)) &&
+             (!s.inc || (ans.inc && s.inc.indexOf(ans.inc) > -1)) &&
+             (!s.age || (ans.age && s.age.indexOf(ans.age) > -1));
+    });
+  }
+
+  function addBubble(text, isUser) {
+    var d = document.createElement("div");
+    d.className = "bubble" + (isUser ? " me" : "");
+    d.textContent = text;
+    $("chat").appendChild(d);
+    return d;
+  }
+
+  function goBackToStep(idx) {
+    step = idx;
+    for (var j = idx; j < Q.length; j++) {
+      delete ans[Q[j].k];
+    }
+    renderSchemesChat();
+  }
+
+  // Parsing user text/speech in English, Kannada, Telugu, Hindi
+  function parseAnswer(key, rawVal) {
+    var v = rawVal.toLowerCase().trim();
+    var numMatch = v.match(/[\d.]+/);
+    var num = numMatch ? parseFloat(numMatch[0]) : NaN;
+
+    if (key === "occ") {
+      var occRules = [
+        ["farmer", /farm|kisan|rythu|raitha|ರೈತ|ಬೆಳೆ|ರೈತು|किसान|खेती/i],
+        ["student", /student|stud|vidyarthi|ವಿದ್ಯಾರ್ಥಿ|ಓದು|విద్యార్థి|छात्र|विद्यार्थी/i],
+        ["woman", /wom|girl|family|mahile|ಮಹಿಳೆ|ಕುಟುಂಬ|ಮಗಳು|మహిళ|కుటుంబ|महिला|परिवार|बेटी/i],
+        ["biz", /business|shop|trade|vyapara|ವ್ಯಾಪಾರ|ಅಂಗಡಿ|ಉದ್ಯಮ|వ్యాపార|అంగడి|व्यवसाय|व्यापार|दुकान/i],
+        ["other", /other|itara|ಇತರೆ|ఇతర|अन्य/i]
+      ];
+      for (var i = 0; i < occRules.length; i++) {
+        if (occRules[i][1].test(v)) return occRules[i][0];
+      }
+      return null;
+    }
+
+    if (key === "inc") {
+      if (/low|below|less|poor|under|kadime|ಕಡಿಮೆ|తక్కువ|పేద|कम|गरीब/i.test(v)) return "low";
+      if (/high|above|more|hechchu|ಹೆಚ್ಚು|ఎక్కువ|అధిక|अधिक|ज्यादा/i.test(v)) return "high";
+      if (!isNaN(num)) {
+        // Handle numbers like 1.5, 2, 150000, etc.
+        var rupees = num >= 1000 ? num : num * 100000;
+        return rupees < 300000 ? "low" : "high";
+      }
+      return null;
+    }
+
+    if (key === "age") {
+      if (!isNaN(num)) {
+        if (/under|below|olage|ಕಡಿಮೆ/i.test(v) && num <= 18) return "u18";
+        return num < 18 ? "u18" : (num < 60 ? "adult" : "senior");
+      }
+      if (/senior|old|elder|vridha|ಹಿರಿಯ|ವೃದ್ಧ|వృద్ధ|बुजुर्ग/i.test(v)) return "senior";
+      if (/child|minor|kid|magu|ಮಗು|పిల్ల|बच्च/i.test(v)) return "u18";
+      if (/adult|18|59|वयस्क|పెద్ద/i.test(v)) return "adult";
+      return null;
+    }
+
+    return null;
+  }
+
+  function startSpeechRecognition(onTextCallback, micBtn) {
+    if (!SR) {
+      setStatusMsg(T.nomic[L], true);
+      return;
+    }
+    try {
+      var rec = new SR();
+      rec.lang = LC[L];
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+      if (micBtn) micBtn.classList.add("on");
+
+      rec.onresult = function (e) {
+        var transcript = e.results && e.results[0] && e.results[0][0] ? e.results[0][0].transcript : "";
+        if (transcript) onTextCallback(transcript);
+      };
+      rec.onend = function () {
+        if (micBtn) micBtn.classList.remove("on");
+      };
+      rec.onerror = function () {
+        if (micBtn) micBtn.classList.remove("on");
+        setStatusMsg(T.nomic[L], true);
+      };
+      rec.start();
+    } catch (err) {
+      if (micBtn) micBtn.classList.remove("on");
+      setStatusMsg(T.nomic[L], true);
+    }
+  }
+
+  function buildQuestionInput(q) {
+    var wrap = document.createElement("div");
+    wrap.className = "qin";
+    wrap.innerHTML = '<input type="text" autocomplete="off"><button type="button" class="mic" aria-label="Speak">🎤</button><button type="button" class="go"></button>';
+    var inp = wrap.querySelector("input");
+    var goBtn = wrap.querySelector(".go");
+    var micBtn = wrap.querySelector(".mic");
+    inp.placeholder = T.typeAns[L];
+    goBtn.textContent = T.go[L];
+
+    function submitAns(val) {
+      var clean = (val || "").trim();
+      if (!clean) return;
+      var parsed = parseAnswer(q.k, clean);
+      if (parsed) {
+        ans[q.k] = parsed;
+        step++;
+        renderSchemesChat();
+      } else {
+        setStatusMsg(T.nu[L], true);
+      }
+    }
+
+    goBtn.onclick = function () { submitAns(inp.value); };
+    inp.onkeydown = function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        submitAns(inp.value);
+      }
+    };
+    micBtn.onclick = function () {
+      startSpeechRecognition(function (spoken) {
+        inp.value = spoken;
+        submitAns(spoken);
+      }, micBtn);
+    };
+    $("opts").appendChild(wrap);
+  }
+
+  function renderSchemesChat() {
+    $("chat").innerHTML = "";
+    $("opts").innerHTML = "";
+
+    for (var i = 0; i < Q.length; i++) {
+      if (i < step) {
+        var qItem = Q[i];
+        addBubble(qItem.q[L], false);
+        var chosenOpt = null;
+        for (var j = 0; j < qItem.o.length; j++) {
+          if (qItem.o[j][0] === ans[qItem.k]) {
+            chosenOpt = qItem.o[j];
+            break;
+          }
+        }
+        var userBub = addBubble(chosenOpt ? chosenOpt[1][L] : "", true);
+        var chgBtn = document.createElement("button");
+        chgBtn.type = "button";
+        chgBtn.className = "mini chg";
+        chgBtn.textContent = "✎ " + T.chg[L];
+        (function (idx) {
+          chgBtn.onclick = function () { goBackToStep(idx); };
+        })(i);
+        userBub.appendChild(chgBtn);
+      }
+    }
+
+    if (step < Q.length) {
+      var curQ = Q[step];
+      var qBub = addBubble(curQ.q[L], false);
+      var spBtn = document.createElement("button");
+      spBtn.type = "button";
+      spBtn.className = "mini chg";
+      spBtn.textContent = "🔊 " + T.listen[L];
+      spBtn.onclick = function () {
+        var optLabels = curQ.o.map(function (o) { return o[1][L]; }).join(", ");
+        speak(curQ.q[L] + ". " + optLabels);
+      };
+      qBub.appendChild(spBtn);
+
+      curQ.o.forEach(function (opt) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.textContent = opt[1][L];
+        b.onclick = function () {
+          ans[curQ.k] = opt[0];
+          step++;
+          renderSchemesChat();
+        };
+        $("opts").appendChild(b);
+      });
+
+      buildQuestionInput(curQ);
+    }
+
+    renderSchemeCards();
+  }
+
+  function renderSchemeCards() {
+    var container = $("cards");
+    container.innerHTML = "";
+    $("again").style.display = step > 0 ? "block" : "none";
+
+    if (step < Q.length) {
+      var emp = document.createElement("div");
+      emp.className = "empty";
+      emp.textContent = T.empty[L];
+      container.appendChild(emp);
+      return;
+    }
+
+    var matched = matchSchemes();
+    if (!matched.length) {
+      var noRes = document.createElement("div");
+      noRes.className = "empty";
+      noRes.textContent = T.none[L];
+      container.appendChild(noRes);
+      return;
+    }
+
+    matched.forEach(function (sc) {
+      var card = document.createElement("div");
+      card.className = "sc";
+      card.innerHTML =
+        '<h3></h3><p></p><div class="docs"></div>' +
+        '<div class="row"><button type="button" class="listen"></button><a class="apply" target="_blank" rel="noopener noreferrer"></a></div>';
+      card.querySelector("h3").textContent = sc.n[L];
+      card.querySelector("p").textContent = sc.b[L];
+      card.querySelector(".docs").textContent = T.docs[L] + ": " + sc.d[L];
+
+      var listenBtn = card.querySelector(".listen");
+      listenBtn.textContent = "🔊 " + T.listen[L];
+      listenBtn.onclick = function () {
+        speak(sc.n[L] + ". " + sc.b[L]);
+      };
+
+      var applyLink = card.querySelector(".apply");
+      applyLink.textContent = T.apply[L];
+      applyLink.href = sc.u;
+
+      container.appendChild(card);
+    });
+  }
+
+  // Multi-symptom chips toggle
+  function renderSymptomChips() {
+    var chipsWrap = $("chips");
+    chipsWrap.innerHTML = "";
+    Object.keys(C).forEach(function (key) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = C[key].l[L];
+      var isSelected = selectedSyms.indexOf(key) > -1;
+      btn.setAttribute("aria-pressed", isSelected ? "true" : "false");
+      btn.onclick = function () {
+        var idx = selectedSyms.indexOf(key);
+        if (idx > -1) {
+          selectedSyms.splice(idx, 1);
+        } else {
+          selectedSyms.push(key);
+        }
+        renderSymptomChips();
+      };
+      chipsWrap.appendChild(btn);
+    });
+  }
+
+  var SYM_PATTERNS = {
+    spots: /spot|brown|blast|kale|ಕಲೆ|ಕಂದು|మచ్చ|గోధుమ|धब्बे|धब्बा|भूरे/i,
+    yellow: /yellow|haladi|ಹಳದಿ|పసుపు|पीली|पीला/i,
+    holes: /hole|eaten|worm|caterpillar|randhra|ರಂಧ್ರ|ಹುಳು|రంధ్ర|పురుగు|छेद|कीट|सुंडी/i,
+    white: /white|powder|mildew|bili|ಬಿಳಿ|ಬೂದಿ|తెల్ల|బూడిద|सफेद|पाउडर|चूर्ण/i,
+    wilt: /wilt|dry|droop|badu|ಬಾಡ|ಸೊರಗು|వాడ|मुरझा|सूख/i
+  };
+
+  function handleSymptomInput(rawText) {
+    var clean = (rawText || "").trim();
+    if (!clean) return;
+    var addedAny = false;
+    Object.keys(SYM_PATTERNS).forEach(function (key) {
+      if (SYM_PATTERNS[key].test(clean) && selectedSyms.indexOf(key) === -1) {
+        selectedSyms.push(key);
+        addedAny = true;
+      }
+    });
+    if (addedAny) {
+      renderSymptomChips();
+      setStatusMsg(T.selectedSymsLbl[L] + ": " + selectedSyms.map(function (k) { return C[k].l[L]; }).join(", "), false);
+    } else {
+      setStatusMsg(T.nu[L], true);
+    }
+  }
+
+  // Audio recording via MediaRecorder + Web Audio API voice signal detection
+  function stopAudioAnalyser() {
+    if (animFrame) {
+      cancelAnimationFrame(animFrame);
+      animFrame = null;
+    }
+    if (audioCtx) {
+      try { audioCtx.close(); } catch (e) {}
+      audioCtx = null;
+      analyser = null;
+    }
+  }
+
+  function startAudioRecording() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === "undefined") {
+      setStatusMsg(T.recErr[L], true);
+      return;
+    }
+
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+      audioChunks = [];
+      peakLevel = 0;
+      audioDetectedSignal = false;
+
+      try {
+        var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+          var src = audioCtx.createMediaStreamSource(stream);
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 256;
+          src.connect(analyser);
+          var dataArr = new Uint8Array(analyser.frequencyBinCount);
+
+          var monitorLevel = function () {
+            if (!isRecording || !analyser) return;
+            analyser.getByteTimeDomainData(dataArr);
+            var maxDev = 0;
+            for (var i = 0; i < dataArr.length; i++) {
+              var dev = Math.abs(dataArr[i] - 128);
+              if (dev > maxDev) maxDev = dev;
+            }
+            if (maxDev > peakLevel) peakLevel = maxDev;
+            if (maxDev > 5) audioDetectedSignal = true;
+            animFrame = requestAnimationFrame(monitorLevel);
+          };
+          animFrame = requestAnimationFrame(monitorLevel);
+        }
+      } catch (e) {
+        // Fallback if Web Audio analyser isn't available
+        audioDetectedSignal = true;
+      }
+
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = function (ev) {
+        if (ev.data && ev.data.size > 0) {
+          audioChunks.push(ev.data);
+        }
+      };
+
+      mediaRecorder.onstop = function () {
+        isRecording = false;
+        $("recBtn").classList.remove("on");
+        $("recTxt").textContent = T.recStart[L];
+        stopAudioAnalyser();
+
+        stream.getTracks().forEach(function (trk) { trk.stop(); });
+
+        if (!audioChunks.length) {
+          audioBlob = null;
+          $("audioPlayer").classList.add("hide");
+          $("recStatus").textContent = T.recDoneSilent[L];
+          return;
+        }
+
+        audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || "audio/webm" });
+        if (audioUrl) URL.revokeObjectURL(audioUrl);
+        audioUrl = URL.createObjectURL(audioBlob);
+        var player = $("audioPlayer");
+        player.src = audioUrl;
+        player.classList.remove("hide");
+
+        // Consider audio valid only if non-trivial size AND voice signal detected (or analyser unavailable)
+        var hasValidAudio = audioBlob.size > 500 && (audioDetectedSignal || peakLevel > 4 || !AudioContextClass);
+        audioDetectedSignal = hasValidAudio;
+        $("recStatus").textContent = hasValidAudio ? T.recDoneValid[L] : T.recDoneSilent[L];
+      };
+
+      isRecording = true;
+      $("recBtn").classList.add("on");
+      $("recTxt").textContent = T.recStop[L];
+      $("recStatus").textContent = T.recActive[L];
+      mediaRecorder.start();
+    }).catch(function () {
+      isRecording = false;
+      $("recBtn").classList.remove("on");
+      $("recTxt").textContent = T.recStart[L];
+      $("recStatus").textContent = T.recErr[L];
+      setStatusMsg(T.recErr[L], true);
+    });
+  }
+
+  function stopAudioRecording() {
+    if (mediaRecorder && isRecording) {
+      try {
+        mediaRecorder.stop();
+      } catch (e) {
+        isRecording = false;
+        $("recBtn").classList.remove("on");
+        $("recTxt").textContent = T.recStart[L];
+      }
+    }
+  }
+
+  function clearAudioRecording() {
+    stopAudioRecording();
+    stopAudioAnalyser();
+    audioChunks = [];
+    audioBlob = null;
+    audioDetectedSignal = false;
+    peakLevel = 0;
+    if (audioUrl) {
+      URL.revokeObjectURL(audioUrl);
+      audioUrl = null;
+    }
+    var player = $("audioPlayer");
+    player.removeAttribute("src");
+    player.classList.add("hide");
+    $("recStatus").textContent = T.recIdle[L];
+  }
+
+  function renderEmptyDiagnosis() {
+    if (diagShown) return;
+    $("out").innerHTML = '<div class="empty">' + T.fempty[L] + "</div>";
+  }
+
+  function computeHighestSeverity(keys) {
+    var rank = { low: 1, medium: 2, high: 3 };
+    var best = "low";
+    keys.forEach(function (k) {
+      var sv = C[k] ? C[k].sv : "low";
+      if (rank[sv] > rank[best]) best = sv;
+    });
+    return best;
+  }
+
+  // Diagnosis generator supporting multiple symptoms + strict audio input check
+  function runDiagnosis() {
+    var typedPending = $("symtxt").value.trim();
+    if (typedPending) {
+      $("symtxt").value = "";
+      handleSymptomInput(typedPending);
+    }
+
+    var hasAudioFile = !!(audioBlob && audioBlob.size > 500);
+    var hasValidAudio = hasAudioFile && audioDetectedSignal;
+    var hasSymptoms = selectedSyms.length > 0;
+
+    // Crucial audio behavior: never fabricate diagnosis from empty or silent audio
+    if (!hasSymptoms && !hasValidAudio) {
+      diagShown = false;
+      var emptyReason = hasAudioFile ? T.silentAudioNoSym[L] : T.noInputAtAll[L];
+      $("out").innerHTML =
+        '<div class="empty" style="border-color:var(--danger);color:var(--ink);">' +
+        emptyReason +
+        "</div>";
+      setStatusMsg(emptyReason, true);
+      return;
+    }
+
+    var cropVal = $("crop").value;
+    var cropObj = CROPS.find(function (c) { return c.v === cropVal; });
+    var cropLabel = cropObj ? cropObj.l[L] : cropVal;
+
+    // If audio was recorded validly without specific symptom keywords, provide audio-analysis guidance
+    var activeKeys = hasSymptoms ? selectedSyms.slice() : ["spots", "yellow"];
+    var isAudioOnlyFallback = !hasSymptoms && hasValidAudio;
+
+    var overallSev = computeHighestSeverity(activeKeys);
+    var allToday = [];
+    var allOrganic = [];
+    var allChem = [];
+    var symptomCardsHtml = "";
+
+    activeKeys.forEach(function (k) {
+      var item = C[k];
+      if (!item) return;
+      item.t[L].forEach(function (x) { if (allToday.indexOf(x) === -1) allToday.push(x); });
+      item.o[L].forEach(function (x) { if (allOrganic.indexOf(x) === -1) allOrganic.push(x); });
+      item.c[L].forEach(function (x) { if (allChem.indexOf(x) === -1) allChem.push(x); });
+
+      symptomCardsHtml +=
+        '<div class="diag-card">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">' +
+        '<strong style="color:var(--brand);font-size:1.02rem;">' + item.n[L] + "</strong>" +
+        '<span class="badge sev-' + item.sv + '">' + T.sevN[L] + ": " + T.sev[item.sv][L] + "</span>" +
+        "</div>" +
+        '<div class="docs" style="margin-top:4px;">' + item.l[L] + "</div>" +
+        "</div>";
+    });
+
+    var li = function (arr) {
+      return arr.map(function (x) { return "<li>" + x + "</li>"; }).join("");
+    };
+
+    var chemHtml = allChem.length
+      ? "<ul>" +
+        li(allChem.map(function (x) { return "<b>" + x + "</b> – " + T.price[L]; })) +
+        "</ul>" +
+        '<div class="band"><span>' + T.band[L] + "</span>" +
+        '<span style="background:#b3261e;color:#fff">Red</span>' +
+        '<span style="background:#f2c200;color:#1b1b1b">Yellow</span>' +
+        '<span style="background:#1565c0;color:#fff">Blue</span>' +
+        '<span style="background:#25732b;color:#fff">Green</span></div>'
+      : "<p>—</p>";
+
+    var shopsHtml = "";
+    for (var sIdx = 1; sIdx <= 2; sIdx++) {
+      shopsHtml +=
+        '<div class="sc" style="margin-bottom:8px;">' +
+        "<h3>" + T.shopT[L] + " #" + sIdx + "</h3>" +
+        '<p class="docs">' + T.adr[L] + "</p>" +
+        "</div>";
+    }
+
+    var introNote = isAudioOnlyFallback
+      ? '<div class="demo" style="background:var(--warn);">' + T.audioOnlyNote[L] + "</div>"
+      : '<div class="demo">' + T.fnote[L] + "</div>";
+
+    var selectedBadgeLine = hasSymptoms
+      ? "<p><strong>" + T.selectedSymsLbl[L] + ":</strong> " +
+        selectedSyms.map(function (k) { return C[k].l[L]; }).join(" • ") + "</p>"
+      : "";
+
+    $("out").innerHTML =
+      introNote +
+      '<h3 style="margin:0 0 6px;color:var(--brand);">' + cropLabel + "</h3>" +
+      "<p>" + T.overallSev[L] + ': <span class="badge sev-' + overallSev + '">' + T.sev[overallSev][L] + "</span></p>" +
+      selectedBadgeLine +
+      symptomCardsHtml +
+      '<div class="sec"><h4>' + T.hToday[L] + "</h4><ul>" + li(allToday) + "</ul></div>" +
+      '<div class="sec"><h4>' + T.hOrg[L] + "</h4><ul>" + li(allOrganic) + "</ul></div>" +
+      '<div class="sec"><h4>' + T.hChem[L] + "</h4>" + chemHtml + "</div>" +
+      '<div class="sec"><h4>' + T.hBuy[L] + "</h4>" + shopsHtml +
+      '<a class="ghost" style="display:flex;align-items:center;text-decoration:none;margin-top:6px;" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/agro+input+dealer+near+me">📍 ' + T.near[L] + "</a></div>" +
+      '<div class="safe"><b>' + T.hSafe[L] + '</b><p style="margin:6px 0;">' + T.safe[L] + '</p><p style="margin:0;font-size:0.9rem;">' + T.disc[L] + "</p></div>" +
+      '<div class="row" style="margin-top:12px;"><button type="button" class="listen" id="fl"></button></div>';
+
+    diagShown = true;
+    var speakBtn = $("fl");
+    speakBtn.textContent = "🔊 " + T.listen[L];
+    speakBtn.onclick = function () {
+      var names = activeKeys.map(function (k) { return C[k].n[L]; }).join(", ");
+      speak(cropLabel + ". " + names + ". " + T.sev[overallSev][L] + ". " + T.safe[L]);
+    };
+  }
+
+  function populateCropSelect() {
+    var sel = $("crop");
+    var prevVal = sel.value || "Paddy";
+    sel.innerHTML = "";
+    CROPS.forEach(function (c) {
+      var opt = document.createElement("option");
+      opt.value = c.v;
+      opt.textContent = c.l[L];
+      if (c.v === prevVal) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  function applyLayoutMode(mode) {
+    layoutMode = mode;
+    ["vs", "vf"].forEach(function (id) {
+      var el = $(id);
+      el.classList.remove("mode-mobile", "mode-laptop");
+      if (mode === "mobile") el.classList.add("mode-mobile");
+      if (mode === "laptop") el.classList.add("mode-laptop");
+    });
+    [].forEach.call($("modeBar").children, function (b) {
+      b.setAttribute("aria-pressed", b.dataset.m === mode ? "true" : "false");
+    });
+  }
+
+  // Master UI refresher enforcing strict single-language rendering for L
+  function refreshUI() {
+    document.documentElement.lang = L;
+
+    [].forEach.call($("langs").children, function (b) {
+      b.setAttribute("aria-pressed", b.dataset.l === L ? "true" : "false");
+    });
+
+    $("tag").textContent = T.tag[L];
+    $("modeAuto").textContent = T.modeAuto[L];
+    $("modeMobile").textContent = T.modeMobile[L];
+    $("modeLaptop").textContent = T.modeLaptop[L];
+    $("tabS").textContent = T.tabS[L];
+    $("tabF").textContent = T.tabF[L];
+
+    $("askh").textContent = T.askh[L];
+    $("resh").textContent = T.resh[L];
+    $("txt").placeholder = T.ph[L];
+    $("go").textContent = T.go[L];
+    $("again").textContent = T.again[L];
+    $("note").textContent = T.note[L];
+    $("note").classList.remove("status-banner", "warn");
+
+    $("fh").textContent = T.fh[L];
+    $("cropL").textContent = T.cropL[L];
+    $("photoL").textContent = T.photoL[L];
+    $("dropT").textContent = T.dropT[L];
+    $("symL").textContent = T.symL[L];
+    $("symtxt").placeholder = T.typeSym[L];
+    $("symgo").textContent = T.go[L];
+    $("audL").textContent = T.audL[L];
+    $("recTxt").textContent = isRecording ? T.recStop[L] : T.recStart[L];
+    $("clearRecBtn").textContent = T.clearAudio[L];
+    if (!isRecording && !audioBlob) {
+      $("recStatus").textContent = T.recIdle[L];
+    } else if (audioBlob) {
+      $("recStatus").textContent = audioDetectedSignal ? T.recDoneValid[L] : T.recDoneSilent[L];
+    }
+    $("analyze").textContent = T.analyze[L];
+    $("fres").textContent = T.fres[L];
+    $("fnote").textContent = T.fnote[L];
+    $("fnote").classList.remove("status-banner", "warn");
+
+    populateCropSelect();
+    renderSymptomChips();
+    renderSchemesChat();
+
+    if (diagShown) {
+      runDiagnosis();
+    } else {
+      renderEmptyDiagnosis();
+    }
+  }
+
+  function submitSchemeText(raw) {
+    var clean = (raw || "").trim();
+    if (!clean) return;
+    addBubble(clean, true);
+    var parsedOcc = parseAnswer("occ", clean);
+    if (parsedOcc) {
+      ans.occ = parsedOcc;
+      step = Math.max(step, 1);
+      renderSchemesChat();
+      return;
+    }
+    var parsedInc = parseAnswer("inc", clean);
+    if (parsedInc) {
+      ans.inc = parsedInc;
+      renderSchemeCards();
+      return;
+    }
+    var parsedAge = parseAnswer("age", clean);
+    if (parsedAge) {
+      ans.age = parsedAge;
+      renderSchemeCards();
+      return;
+    }
+    setStatusMsg(T.nu[L], true);
+  }
+
+  // Event listeners
+  $("langs").onclick = function (e) {
+    var btn = e.target.closest("button[data-l]");
+    if (!btn) return;
+    L = btn.dataset.l;
+    refreshUI();
+  };
+
+  $("tabs").onclick = function (e) {
+    var btn = e.target.closest("button[data-t]");
+    if (!btn) return;
+    var targetTab = btn.dataset.t;
+    [].forEach.call($("tabs").children, function (b) {
+      b.setAttribute("aria-pressed", b.dataset.t === targetTab ? "true" : "false");
+    });
+    if (targetTab === "s") {
+      $("vs").classList.remove("hide");
+      $("vf").classList.add("hide");
+    } else {
+      $("vs").classList.add("hide");
+      $("vf").classList.remove("hide");
+    }
+  };
+
+  $("modeBar").onclick = function (e) {
+    var btn = e.target.closest("button[data-m]");
+    if (!btn) return;
+    applyLayoutMode(btn.dataset.m);
+  };
+
+  $("go").onclick = function () {
+    var v = $("txt").value.trim();
+    if (v) {
+      $("txt").value = "";
+      submitSchemeText(v);
+    }
+  };
+
+  $("txt").onkeydown = function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      $("go").onclick();
+    }
+  };
+
+  $("mic").onclick = function () {
+    startSpeechRecognition(function (spoken) {
+      $("txt").value = spoken;
+      submitSchemeText(spoken);
+    }, $("mic"));
+  };
+
+  $("again").onclick = function () {
+    step = 0;
+    ans = {};
+    renderSchemesChat();
+  };
+
+  $("photo").onchange = function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      $("prev").src = reader.result;
+      $("prev").classList.remove("hide");
+    };
+    reader.readAsDataURL(f);
+  };
+
+  $("symgo").onclick = function () {
+    var v = $("symtxt").value.trim();
+    if (v) {
+      $("symtxt").value = "";
+      handleSymptomInput(v);
+    }
+  };
+
+  $("symtxt").onkeydown = function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      $("symgo").onclick();
+    }
+  };
+
+  $("symmic").onclick = function () {
+    startSpeechRecognition(function (spoken) {
+      $("symtxt").value = spoken;
+      handleSymptomInput(spoken);
+    }, $("symmic"));
+  };
+
+  $("recBtn").onclick = function () {
+    if (isRecording) {
+      stopAudioRecording();
+    } else {
+      startAudioRecording();
+    }
+  };
+
+  $("clearRecBtn").onclick = function () {
+    clearAudioRecording();
+  };
+
+  $("analyze").onclick = function () {
+    var loadingHtml = '<div class="empty">' + T.chk[L] + "</div>";
+    $("out").innerHTML = loadingHtml;
+    setTimeout(function () {
+      runDiagnosis();
+    }, 350);
+  };
+
+  // Initialize application
+  refreshUI();
+  applyLayoutMode("auto");
+})();
+</script>
+</body>
+</html>
